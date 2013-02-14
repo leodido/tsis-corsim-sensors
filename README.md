@@ -27,7 +27,7 @@ Then in the project general settings:
 
 While in the project VC++ directory settings:
 
-+	add to _Inclusion directories_ the paths of installed **WinDDK**:
++	add to _Inclusion directories_ this paths:
 
 	`%WinDDK%\inc\atl71`
 
