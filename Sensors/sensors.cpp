@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 // c++ includes
 #include <stdio.h>
 #include <string.h>
@@ -8,7 +10,6 @@
 #include "netsim.h"
 
 // RTE related includes
-#include "stdafx.h"
 #include "network.h"
 #include "sensors.h"
 #include "commons.h"

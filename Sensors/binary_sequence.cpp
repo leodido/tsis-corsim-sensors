@@ -1,6 +1,7 @@
+#include "stdafx.h"
+
 #include <math.h>
 
-#include "stdafx.h"
 #include "binary_sequence.h"
 #include "integer.h"
 

@@ -1,10 +1,11 @@
+#include "stdafx.h"
+
 #include "corsim.h"
 #include "netsim.h"
 #include "corwin.h"
 
 #include "commons.h"
 
-#include "stdafx.h"
 #include "node.h"
 #include "link.h"
 

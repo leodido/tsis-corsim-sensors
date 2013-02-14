@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include <math.h>
 
 #include "corsim.h"
@@ -5,7 +7,6 @@
 #include "corwin.h"
 #include "commons.h"
 
-#include "stdafx.h"
 #include "detector.h"
 #include "link.h"
 #include "lane.h"

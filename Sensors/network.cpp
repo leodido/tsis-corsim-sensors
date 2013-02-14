@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -5,12 +7,12 @@
 #include <vector>
 #include <iterator>
 #include <iomanip>
+#include <stdlib.h>
 
 #include "corsim.h"
 #include "netsim.h"
 #include "corwin.h"
 
-#include "stdafx.h"
 #include "network.h"
 #include "node.h"
 #include "link.h"
@@ -39,7 +41,9 @@ CNetwork::CNetwork(const CString& input_traf_file_name)
                   , m_node_list()
 {
     char buff[DTTMSZ];
-    m_sensors_output_file  = m_traf_input_file;
+	char base_name[256];
+	_splitpath_s(m_traf_input_file, NULL, NULL, NULL, NULL, base_name, 256, NULL, NULL);
+    m_sensors_output_file  = base_name;
     m_sensors_output_file += _T(getDateTime(buff));
 }
 

@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include <string>
 #include <vector>
 
@@ -6,7 +8,6 @@
 #include "corwin.h"
 #include "commons.h"
 
-#include "stdafx.h"
 #include "detector.h"
 #include "lane.h"
 #include "link.h"

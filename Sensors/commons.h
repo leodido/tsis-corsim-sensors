@@ -43,7 +43,7 @@ extern int prev_time;
 #include <fstream>
 using namespace std;
 
-#define DTTMFMT " %Y%m%d_%H%M%S"
+#define DTTMFMT "_%Y%m%d_%H%M%S"
 #define DTTMSZ 17 // must allow extra character for the null terminator
 
 static char* getDateTime(char* buff) {
