@@ -33,11 +33,13 @@ While in the project VC++ directory settings:
 
 	`%WinDDK%\inc\mfc42`
 
+
 +	add to _LIbrary directories_ this paths:
 
 	`%WinDDK%\lib\ATL\i386`
 
 	`%WinDDK%\lib\Mfc\i386`
+
 
 Note that `%WinDDK%` is the path of your local **WinDDK** installation (i.e. mine is `C:\WinDDK\7600.16385.1`).
 
