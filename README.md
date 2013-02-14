@@ -41,12 +41,11 @@ and
 
 	`%WinDDK%\lib\Mfc\i386`
 
-
-Note that `%WinDDK%` is the path of your local **WinDDK** installation (i.e. mine is `C:\WinDDK\7600.16385.1`).
-
 Finally in the linker input settings:
 
 +	add to _Additional dependecies_ one row for `corsim.lib` and one for `corwin.lib`
+
+Note that `%WinDDK%` is the path of your local **WinDDK** installation, i.e. `C:\WinDDK\7600.16385.1`.
 
 [guide]: http://bit.ly/mfc-in-visual-c-express
 [RTE]: http://mctrans.ce.ufl.edu/featured/tsis/version6/CORSIMRTE.htm
