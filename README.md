@@ -33,8 +33,9 @@ While in the project VC++ directory settings:
 
 	`%WinDDK%\inc\mfc42`
 
+and
 
-+	add to _LIbrary directories_ this paths:
++	add to _Library directories_ this paths:
 
 	`%WinDDK%\lib\ATL\i386`
 
