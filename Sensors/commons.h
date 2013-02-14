@@ -1,6 +1,3 @@
-#ifndef COMMONS_SENSORS
-#define COMMONS_SENSORS
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -21,6 +18,11 @@
     Description:
     Definition of global variables only related to the RTE code.
 *****************************************************************************************/
+
+#ifndef COMMONS_SENSORS
+#define COMMONS_SENSORS
+
+#pragma once
 
 // define a color (forest green) for display messages issued by the RTE
 #define RTE_MESSAGE_RGB 0x00116400L

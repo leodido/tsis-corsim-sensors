@@ -1,6 +1,3 @@
-#ifndef CNETWORK
-#define CNETWORK
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -22,6 +19,11 @@
     Class that represents and encapsulates the network.
 *****************************************************************************************/
 
+#ifndef CNETWORK
+#define CNETWORK
+
+#pragma once
+
 #include <string>
 
 class CDetector;
@@ -31,7 +33,14 @@ class CNode;
 class CNetwork : public CObject
 {
     public:
-        enum OutputProcessor { ALL = 0, DETECTORS = 1, NODES = 2, LINKS = 3, LANES = 4, NO = 5 };
+        enum OutputProcessor {
+			ALL			= 0,
+			DETECTORS	= 1,
+			NODES		= 2,
+			LINKS		= 3,
+			LANES		= 4,
+			NO			= 5
+		};
 
         CNetwork();
         explicit CNetwork(const CString& input_traf_file_name);

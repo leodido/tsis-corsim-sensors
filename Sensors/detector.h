@@ -1,6 +1,3 @@
-#ifndef CDETECTOR
-#define CDETECTOR
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -21,6 +18,11 @@
     Description:
     Class that represents and encapsulates the detector/sensor.
 *****************************************************************************************/
+
+#ifndef CDETECTOR
+#define CDETECTOR
+
+#pragma once
 
 #include <string>
 #include <vector>

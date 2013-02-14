@@ -1,6 +1,3 @@
-#ifndef CINTEGER
-#define CINTEGER
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -21,6 +18,11 @@
     Description:
     Helper class for the integer data type.
 *****************************************************************************************/
+
+#ifndef CINTEGER
+#define CINTEGER
+
+#pragma once
 
 class CInteger : public CObject
 {

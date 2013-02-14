@@ -10,7 +10,7 @@ To extend TSIS-CORSIM in order to provide the **tracking** and the **logging** o
 
 ## Dependecies
 
-This code depends on, as well as `corsim.dll` and `corwin.lib` (included in the source), from the **MFC** libraries (because most of classes inherit from its `CObject` class).
+This code depends on, as well as `corsim.dll` and `corwin.lib` (included in the source), from the **MFC** and **ATL** libraries (because most of classes inherit from its `CObject` class).
 
 ## Microsof Visual Studio C++ 2010
 
@@ -18,7 +18,7 @@ This project is written in Visual C++ and contained in a Microsoft Visual Studio
 
 ### Configuration
 
-To install and use **MFC** classes adapt this [guide][].
+To install and use **MFC** classes adapt this [guide][]. Futher informations are available [here][].
 
 Then in the project general settings:
 
@@ -29,25 +29,26 @@ While in the project VC++ directory settings:
 
 +	add to _Inclusion directories_ this paths:
 
-	`%WinDDK%\inc\atl71`
+	`$(DDK_directory)\inc\atl71`
 
-	`%WinDDK%\inc\mfc42`
+	`$(DDK_directory)\inc\mfc42`
 
 and
 
 +	add to _Library directories_ this paths:
 
-	`%WinDDK%\lib\ATL\i386`
+	`$(DDK_directory)\lib\ATL\i386`
 
-	`%WinDDK%\lib\Mfc\i386`
+	`$(DDK_directory)\lib\Mfc\i386`
 
 Finally in the linker input settings:
 
 +	add to _Additional dependecies_ one row for `corsim.lib` and one for `corwin.lib`
 
-Note that `%WinDDK%` is the path of your local **WinDDK** installation, i.e. `C:\WinDDK\7600.16385.1`.
+Note that `$(DDK_directory)` is the path of your local **WinDDK** installation, i.e. `C:\WinDDK\7600.16385.1`.
 
 [guide]: http://bit.ly/mfc-in-visual-c-express
+[here]: http://www.hard-light.net/forums/index.php?topic=80725.0
 [RTE]: http://mctrans.ce.ufl.edu/featured/tsis/version6/CORSIMRTE.htm
 [6.2]: http://mctrans.ce.ufl.edu/featured/tsis/
 [TSIS-CORSIM]: http://ops.fhwa.dot.gov/trafficanalysistools/corsim.htm

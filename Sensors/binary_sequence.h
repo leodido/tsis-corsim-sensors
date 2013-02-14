@@ -1,6 +1,3 @@
-#ifndef CBINARYSEQUENCE
-#define CBINARYSEQUENCE
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -21,6 +18,11 @@
     Description:
     Helper class for binary sequences.
 *****************************************************************************************/
+
+#ifndef CBINARYSEQUENCE
+#define CBINARYSEQUENCE
+
+#pragma once
 
 class CInteger;
 

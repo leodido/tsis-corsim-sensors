@@ -1,6 +1,3 @@
-#ifndef NETSIM_SHARED_MEMORY
-#define NETSIM_SHARED_MEMORY
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -21,6 +18,11 @@
     Description:
     Import and definition of NETSIM exported variables. 
 *****************************************************************************************/
+
+#ifndef NETSIM_SHARED_MEMORY
+#define NETSIM_SHARED_MEMORY
+
+#pragma once
 
 // include interfacing helpers and linked corsim.dll
 #include "corsim.h"

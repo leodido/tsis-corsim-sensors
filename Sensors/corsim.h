@@ -1,5 +1,3 @@
-#ifndef CORSIM_RTE_INTERFACE
-#define CORSIM_RTE_INTERFACE
 
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
@@ -22,6 +20,11 @@
     Definition of macros that make easier the process (import and export)
     of interfacing between CORSIM and a RTE.
 *****************************************************************************************/
+
+#ifndef CORSIM_RTE_INTERFACE
+#define CORSIM_RTE_INTERFACE
+
+#pragma once
 
 #ifdef __cplusplus
 

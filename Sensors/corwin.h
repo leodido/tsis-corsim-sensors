@@ -1,6 +1,3 @@
-#ifndef CORSIM_WINDOWS_INTERFACE
-#define CORSIM_WINDOWS_INTERFACE
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -21,6 +18,11 @@
     Description:
     Definition of the CORWIN API.
 *****************************************************************************************/
+
+#ifndef CORSIM_WINDOWS_INTERFACE
+#define CORSIM_WINDOWS_INTERFACE
+
+#pragma once
 
 #ifdef CORWIN_IMPLEMENTATION
 #define CORWINAPI __declspec(dllexport)

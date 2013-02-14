@@ -102,7 +102,6 @@ void CNetwork::writeOutput(void)
     {
         std::ofstream output_stream;
         output_stream.open((LPCTSTR) m_sensors_output_file);
-        // output_stream << "ciao ciao" << std::endl;
         switch(m_out_type)
         {
             case DETECTORS:

@@ -1,6 +1,3 @@
-#ifndef STDAFX
-#define STDAFX
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -22,12 +19,22 @@
     Inclusion of MFC components.
 *****************************************************************************************/
 
+#ifndef STDAFX
+#define STDAFX
+
+#pragma once
+
 #pragma warning(push)           // start disable warnings
 #pragma warning(disable: 4244)  // possible loss of data
 
+#include <afx.h>
 #include <afxwin.h>             // MFC core and standard components
 #include <afxext.h>             // MFC extensions
 #include <afxtempl.h>           // MFC templates
+
+#ifndef _AFX_NO_OLE_SUPPORT
+#include <afxdisp.h>			// MFC automation classes
+#endif // _AFX_NO_OLE_SUPPORT
 
 #pragma warning(pop)            // stop disable warnings
 

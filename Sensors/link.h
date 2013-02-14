@@ -1,6 +1,3 @@
-#ifndef CLINK
-#define CLINK
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -21,6 +18,11 @@
     Description:
     Class that represents and encapsulates the link.
 *****************************************************************************************/
+
+#ifndef CLINK
+#define CLINK
+
+#pragma once
 
 #include "node.h"
 

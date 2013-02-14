@@ -1,6 +1,3 @@
-#ifndef CNODE
-#define CNODE
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -21,6 +18,11 @@
     Description:
     Class that represents and encapsulates the node.
 *****************************************************************************************/
+
+#ifndef CNODE
+#define CNODE
+
+#pragma once
 
 // define constant for the maximum number of approaches
 const int max_approaches = 5;

@@ -1,6 +1,3 @@
-#ifndef SENSORS
-#define SENSORS
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -19,7 +16,12 @@
     Application: tsis-corsim-sensors
 
     Description:
-    Definition of global variables only related to the RTE code.
+    Entry point header file.
 *****************************************************************************************/
+
+#ifndef SENSORS
+#define SENSORS
+
+#pragma once
 
 #endif // SENSORS

@@ -1,6 +1,3 @@
-#ifndef CLANE
-#define CLANE
-
 /*****************************************************************************************
     Copyright 2013 Leonardo Di Donato
 
@@ -21,6 +18,11 @@
     Description:
     Class that represents and encapsulates the lane.
 *****************************************************************************************/
+
+#ifndef CLANE
+#define CLANE
+
+#pragma once
 
 class CLink;
 class CDetector;
