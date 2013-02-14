@@ -6,7 +6,7 @@ This repository contains code to compile a **DLL** that extends, at runtime, [TS
 
 ## Goal
 
-To extend TSIS-CORSIM in order to provide the tracking and the logging of fine-grained data of the detectors in each traffic simulation model created with the aforementioned simulator.
+To extend TSIS-CORSIM in order to provide the **tracking** and the **logging** of **fine-grained data of the detectors in each traffic simulation model created** with the aforementioned simulator.
 
 ## Dependecies
 
@@ -22,28 +22,28 @@ To install and use **MFC** classes adapt this [guide][].
 
 Then in the project general settings:
 
-+ set _Use of MFC_ to _Use MFC in a shared DLL_
-+ set _Use of ATL_ to _Dynamic linking to ATL_
++	set _Use of MFC_ to _Use MFC in a shared DLL_
++	set _Use of ATL_ to _Dynamic linking to ATL_
 
 While in the project VC++ directory settings:
 
-+ add to _Inclusion directories_ the paths of installed **WinDDK**:
++	add to _Inclusion directories_ the paths of installed **WinDDK**:
 
-%WinDDK%\inc\atl71
+	`%WinDDK%\inc\atl71`
 
-%WinDDK%\inc\mfc42
+	`%WinDDK%\inc\mfc42`
 
-+ add to _LIbrary directories_ this paths:
++	add to _LIbrary directories_ this paths:
 
-`%winDDK%\lib\ATL\i386`
+	`%WinDDK%\lib\ATL\i386`
 
-`%winDDK%\lib\Mfc\i386`
+	`%WinDDK%\lib\Mfc\i386`
 
-Note that `%WinDDK%` is the path of your local **WinDDK** installation (i.e. mine is: C:\WinDDK\7600.16385.1).
+Note that `%WinDDK%` is the path of your local **WinDDK** installation (i.e. mine is `C:\WinDDK\7600.16385.1`).
 
 Finally in the linker input settings:
 
-+ add to _Additional dependecies_ one row for `corsim.lib` and one for `corwin.lib`
++	add to _Additional dependecies_ one row for `corsim.lib` and one for `corwin.lib`
 
 [guide]: http://bit.ly/mfc-in-visual-c-express
 [RTE]: http://mctrans.ce.ufl.edu/featured/tsis/version6/CORSIMRTE.htm
