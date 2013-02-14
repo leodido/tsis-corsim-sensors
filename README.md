@@ -1,4 +1,4 @@
-# Sensors
+# SENSORS
 
 This is a TSIS-CORSIM run-time extension ([RTE][]).
 
