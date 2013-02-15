@@ -7,6 +7,7 @@
 #include "corwin.h"
 #include "commons.h"
 
+#include "sensors.h"
 #include "detector.h"
 #include "link.h"
 #include "lane.h"

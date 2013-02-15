@@ -30,26 +30,4 @@
 // define a global character string used for displaying messages issued by the RTE
 extern char out_buf[132];
 
-extern bool is_log_active;
-
-// declare global variables related to time
-extern int end_of_init;
-extern int prev_init;
-extern int prev_time;
-
-// helper function for textual date and time
-#include <time.h>
-#include <iostream>
-#include <fstream>
-using namespace std;
-
-#define DTTMFMT "_%Y%m%d_%H%M%S"
-#define DTTMSZ 17 // must allow extra character for the null terminator
-
-static char* getDateTime(char* buff) {
-    time_t t = time (0);
-    strftime(buff, DTTMSZ, DTTMFMT, localtime (&t));
-    return buff;
-}
-
 #endif // COMMONS_SENSORS

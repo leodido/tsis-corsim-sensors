@@ -33,7 +33,8 @@ class CNode;
 class CNetwork : public CObject
 {
     public:
-        enum OutputProcessor {
+        enum OutputProcessor
+		{
 			ALL			= 0,
 			DETECTORS	= 1,
 			NODES		= 2,
@@ -49,6 +50,8 @@ class CNetwork : public CObject
         inline CString                  getInputFile(void) const { return m_traf_input_file; }
         inline void                     setInputFile(const CString& name) { m_traf_input_file = name; }
         void                            readInputFile(void);
+
+		void							getTimePeriods(FILE* file);
 
         void                            getNodes(FILE* file);
         CNode*                          findNode(int id);
@@ -83,6 +86,7 @@ class CNetwork : public CObject
         OutputProcessor                 m_out_type;
         CTypedPtrList<CPtrList, CLink*> m_link_list;
         CTypedPtrList<CPtrList, CNode*> m_node_list;
+		CUIntArray						m_tp_lengths;
 };
 
 #endif // CNETWORK

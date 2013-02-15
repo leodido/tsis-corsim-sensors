@@ -66,6 +66,15 @@ DLL_IMPORT struct { int TTLVEH; } SIN117;
 DLL_IMPORT struct { int YINIT; } GLR091;
 #define is_init GLR091.YINIT                                                                // initialization flag: TRUE during initialization, FALSE when it has been completed
 
+DLL_IMPORT struct { int TPCNT; } GLR079;
+#define tp_counter GLR079.TPCNT																// time period counter
+
+DLL_IMPORT struct { int LENPRD; } GLR061;
+#define tp_length GLR061.LENPRD																// length in seconds of the current time period
+
+DLL_IMPORT struct { int MAXTP; } GLR006;
+#define tp_max_num GLR006.MAXTP																// max number of time periods
+ 
 ////////////////////////////////////////////////////////////////////////////////
 // netsim scalar non-array variables, directly exported
 ////////////////////////////////////////////////////////////////////////////////

@@ -13,6 +13,7 @@
 #include "netsim.h"
 #include "corwin.h"
 
+#include "sensors.h"
 #include "network.h"
 #include "node.h"
 #include "link.h"
@@ -27,6 +28,7 @@ CNetwork::CNetwork() : CObject()
                      , m_out_type(NO)
                      , m_link_list()
                      , m_node_list()
+					 , m_tp_lengths()
 {
    // default ctor
 }
@@ -39,11 +41,28 @@ CNetwork::CNetwork(const CString& input_traf_file_name)
                   , m_out_type(NO)
                   , m_link_list()
                   , m_node_list()
+				  , m_tp_lengths()
 {
     char buff[DTTMSZ];
-	char base_name[256];
-	_splitpath_s(m_traf_input_file, NULL, NULL, NULL, NULL, base_name, 256, NULL, NULL);
-    m_sensors_output_file  = base_name;
+	char path_buffer[_MAX_PATH];
+	char drive[_MAX_DRIVE];
+	char dir[_MAX_DIR];
+	char base_name[_MAX_FNAME];
+	errno_t err;
+
+	err = _splitpath_s(m_traf_input_file, drive, _MAX_DRIVE, dir, _MAX_DIR, base_name, _MAX_FNAME, NULL, NULL);
+	if (err != 0)
+	{
+		printf("Error splitting the path. Error code %d.\n", err);
+		exit(1);
+	}
+	err = _makepath_s(path_buffer, _MAX_PATH, drive, dir, base_name, NULL);
+	if (err != 0)
+	{
+		printf("Error creating path. Error code %d.\n", err);
+		exit(1);
+	}
+    m_sensors_output_file  = path_buffer;
     m_sensors_output_file += _T(getDateTime(buff));
 }
 
@@ -96,7 +115,7 @@ void CNetwork::setupOutputProcessor(OutputProcessor type)
         m_sensors_output_file += _T(".csv");
     m_out_type = type;
 
-    sprintf(out_buf, "Output file: \"%s\".\n", m_sensors_output_file);
+    sprintf(out_buf, "Output file: \"%s\".", m_sensors_output_file);
     OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
 }
 
@@ -121,6 +140,7 @@ std::string CNetwork::writeDetectorsOutput(void)
     std::vector<std::string> rows;
     int row = 0;
     int num_det = 0;
+	int current_tp = 1;
     // loop through the links
     CLink* link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
@@ -136,7 +156,7 @@ std::string CNetwork::writeDetectorsOutput(void)
             std::stringstream header;
             if (num_det == 0)
             {
-                header << "time" << ", " << detector->getLabel();
+                header << "time" << ", " << "tp" << ", " << detector->getLabel();
                 rows.push_back(header.str());
             }
             else
@@ -145,15 +165,26 @@ std::string CNetwork::writeDetectorsOutput(void)
                 rows[0] = header.str();
             }
             // loop through the detector transitions
+			int prev_tp_elapsed_decsecs = 0;
+			int curr_tp_elapsed_decsecs = 0;
             std::vector<std::string> transitions = detector->getTransitions();
             for (unsigned i = 0; i < transitions.size(); i++) {
                 std::stringstream t_row;
                 if (num_det == 0)
                 {
+					double time_d = (double) (i + 1) / 10;
                     std::stringstream time;
-                    time << setprecision(4) << setw(4) << ((double) (i + 1) / 10);
-                    t_row << time.str() << ", " << transitions.at(i);
+                    time << setprecision(8) << setw(8) << time_d;
+                    t_row << time.str() << ", " << current_tp << ", " << transitions.at(i);
                     rows.push_back(t_row.str());
+
+					//curr_tp_elapsed_decsecs = i;
+					int curr_tp_secs = m_tp_lengths.GetAt(current_tp - 1);
+					curr_tp_elapsed_decsecs = i - prev_tp_elapsed_decsecs;
+					if (curr_tp_elapsed_decsecs + 1 >= curr_tp_secs * 10) {
+						prev_tp_elapsed_decsecs = prev_tp_elapsed_decsecs + curr_tp_elapsed_decsecs + 1;
+						current_tp = current_tp + 1;
+					}
                 }
                 else if (num_det > 0)
                 {
@@ -177,8 +208,11 @@ void CNetwork::readInputFile()
     FILE* file_trf = NULL;
     if (file_trf = fopen(m_traf_input_file, "r"))
     {
-        sprintf(out_buf, "Opened file \"%s\".\n", m_traf_input_file);
+        sprintf(out_buf, "Opened file: \"%s\".", m_traf_input_file);
         OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+		// parse the time periods
+		getTimePeriods(file_trf);
+		rewind(file_trf);
         // create the node list
         getNodes(file_trf);
         rewind(file_trf);
@@ -253,10 +287,42 @@ int CNetwork::readTRFLine(FILE* file, char* line)
     return card_type;
 }
 
+void CNetwork::getTimePeriods(FILE* file)
+{
+	if (is_log_active) {
+		sprintf(out_buf, "Parsing %s ...", "time periods");
+		OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+	}
+	// get the node information from the TRAF file and create the node list
+    char line[81] = { '\0' };
+	int card_type = 0;
+	// read data records from the TRAF file
+    while (!feof(file))
+    {
+		// read a line of the file
+        card_type = readTRFLine(file, line);
+		// parse the line based on its card type
+        if (card_type == 3)
+        {
+			for (int tp = 0; tp < tp_max_num; tp++) {
+				char curr_tp_duration[5] = { '\0' };
+				// extract the duration of current time period
+				strncpy_s(curr_tp_duration, line + (tp * 4), 4);
+				int seconds = atoi(curr_tp_duration);
+				if (seconds > 0) {
+					m_tp_lengths.Add(seconds);
+				}
+			}
+		}
+	}
+}
+
 void CNetwork::getNodes(FILE* file)
 {
-    sprintf(out_buf, "Parsing %s ...", "nodes");
-    OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+	if (is_log_active) {
+		sprintf(out_buf, "Parsing %s ...", "nodes");
+		OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+	}
     // get the node information from the TRAF file and create the node list
     char line[81] = { '\0' };
     int card_type = 0;
