@@ -137,10 +137,24 @@ void CNetwork::writeOutput(void)
 
 std::string CNetwork::writeDetectorsOutput(void)
 {
-    std::vector<std::string> rows;
+	std::vector<std::string> rows;
     int row = 0;
     int num_det = 0;
 	int current_tp = 1;
+	// counting the digits of the total time of simulation (and so of tracking/tracing)
+	long n_digits = 1, calc = 0;
+	bool finished = false;
+	calc = net_clock;
+	while (!finished)
+    {
+		calc /= 10;
+        if (calc != 0)
+            n_digits++;
+        else
+            finished = true;
+	}
+	int decsecs_prec = 5;
+	int secs_prec = decsecs_prec + 1 + n_digits;
     // loop through the links
     CLink* link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
@@ -156,12 +170,12 @@ std::string CNetwork::writeDetectorsOutput(void)
             std::stringstream header;
             if (num_det == 0)
             {
-                header << "time" << ", " << "tp" << ", " << detector->getLabel();
+                header << "time" << "," << "tp" << "," << detector->getLabel();
                 rows.push_back(header.str());
             }
             else
             {
-                header << rows.at(0) << ", " << detector->getLabel();
+                header << rows.at(0) << "," << detector->getLabel();
                 rows[0] = header.str();
             }
             // loop through the detector transitions
@@ -173,9 +187,9 @@ std::string CNetwork::writeDetectorsOutput(void)
                 if (num_det == 0)
                 {
 					double time_d = (double) (i + 1) / 10;
-                    std::stringstream time;
-                    time << setprecision(8) << setw(8) << time_d;
-                    t_row << time.str() << ", " << current_tp << ", " << transitions.at(i);
+					std::stringstream time;
+                    time << setw(secs_prec) << setprecision(decsecs_prec) << fixed << time_d;
+					t_row << time.str() << "," << current_tp << "," << transitions.at(i);
                     rows.push_back(t_row.str());
 
 					//curr_tp_elapsed_decsecs = i;
@@ -188,7 +202,7 @@ std::string CNetwork::writeDetectorsOutput(void)
                 }
                 else if (num_det > 0)
                 {
-                    t_row << rows.at(i + 1) << ", " << transitions.at(i);
+                    t_row << rows.at(i + 1) << "," << transitions.at(i);
                     rows[i + 1] = t_row.str();
                 }                
             }
