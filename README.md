@@ -4,19 +4,19 @@ This is a TSIS-CORSIM run-time extension ([RTE][]).
 
 This repository contains code to compile a **DLL** that extends, at runtime, [TSIS-CORSIM][] (version [6.2][]), the _"Traffic Software Integrated System - Corridor Simulation system"_.
 
-## Goal
+## GOAL
 
 To extend TSIS-CORSIM in order to provide the **tracking** and the **logging** of **fine-grained data of the detectors in each traffic simulation model created** with the aforementioned simulator.
 
-## Dependecies
+## DEPENDENCIES
 
 This code depends on, as well as `corsim.dll` and `corwin.lib` (included in the source), from the **MFC** and **ATL** libraries (because most of classes inherit from its `CObject` class).
 
-## Microsof Visual Studio C++ 2010
+## MS VISUAL STUDIO C++ 2010
 
 This project is written in Visual C++ and contained in a Microsoft Visual Studio C++ 2010 solution project.
 
-### Configuration
+### CONFIGURATION
 
 To install and use **MFC** classes adapt this [guide][]. Futher informations are available [here][].
 
