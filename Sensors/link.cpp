@@ -99,7 +99,7 @@ void CLink::processDetectors(void)
    {
       detector = m_detector_list.GetNext(pos);
 
-      if (is_log_active) {
+      if (is_log_active && log_level == 2) {
           sprintf(out_buf, "# detector { id: %d, lane: %d }", detector->getId(), detector->getLane()->getId());
           OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
       }
@@ -139,7 +139,7 @@ void CLink::processDetectors(void)
          }
          if ((old_state == 1) && (new_state == 1))
          {
-            detector->setActivationTime(detector->getActivationTime() + 0.1f);
+			detector->setActivationTime(detector->getActivationTime() + 0.1f);
             detector->setDeactivationTime(0.0f);
             detector->setState(true, !is_init); // set state and record it if is not the initialization phase
          }
@@ -160,8 +160,22 @@ void CLink::processDetectors(void)
       }
       // clean up
       delete sequence;
+	  // update count
       detector->setCount((int) num);
    }
+}
+
+void CLink::resetDetectorsCount(void)
+{
+	POSITION pos = NULL;
+	CDetector* detector = NULL;
+	// loop through the detectors
+	pos = m_detector_list.GetHeadPosition();
+	while (pos != NULL)
+	{
+		detector = m_detector_list.GetNext(pos);
+		detector->setCount(0);
+	}
 }
 
 void CLink::printDetectorsTransitions(void)
@@ -202,7 +216,7 @@ float CLink::computeTravelTime(void)
 
 void CLink::printDetectorsCount(void)
 {
-    // get the detectors count and save it in the *.txt
+    // get the detectors count
     POSITION pos = NULL;
     CDetector* detector = NULL;
     // loop through the detectors

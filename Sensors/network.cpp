@@ -25,6 +25,7 @@ CNetwork::CNetwork() : CObject()
                      , m_network_name("")
                      , m_traf_input_file("")
                      , m_sensors_output_file("")
+					 , m_sensors_cum_output_file("")
                      , m_out_type(NO)
                      , m_link_list()
                      , m_node_list()
@@ -64,6 +65,7 @@ CNetwork::CNetwork(const CString& input_traf_file_name)
 	}
     m_sensors_output_file  = path_buffer;
     m_sensors_output_file += _T(getDateTime(buff));
+	m_sensors_cum_output_file = m_sensors_output_file;
 }
 
 CNetwork::~CNetwork()
@@ -94,29 +96,32 @@ void CNetwork::setupOutputProcessor(OutputProcessor type)
     switch(type)
     {
         case DETECTORS:
-            m_sensors_output_file += _T("_sensors");
+            m_sensors_output_file += _T("_sensors.csv");
+			m_sensors_cum_output_file += _T("_sensors_counts.tsv");
+			// if (log_is_active)
+			sprintf(out_buf, "Output file: \"%s\".", m_sensors_output_file);
+			OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+			if (write_others) {
+				sprintf(out_buf, "Counts file: \"%s\".", m_sensors_cum_output_file);
+				OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+			}
             break;
         case LINKS:
-            m_sensors_output_file += _T("_links");
+            m_sensors_output_file += _T("_links.csv");
             break;
         case NODES:
-            m_sensors_output_file += _T("_nodes");
+            m_sensors_output_file += _T("_nodes.csv");
             break;
         case LANES:
-            m_sensors_output_file += _T("_lanes");
+            m_sensors_output_file += _T("_lanes.csv");
             break;
         case ALL:
-            m_sensors_output_file += _T("_complete_report");
+            m_sensors_output_file += _T("_complete_report.csv");
             break;
         default:
             break;
     }
-    if (type != NO)
-        m_sensors_output_file += _T(".csv");
     m_out_type = type;
-
-    sprintf(out_buf, "Output file: \"%s\".", m_sensors_output_file);
-    OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
 }
 
 void CNetwork::writeOutput(void)
@@ -124,15 +129,61 @@ void CNetwork::writeOutput(void)
     if (m_out_type != NULL)
     {
         std::ofstream output_stream;
-        output_stream.open((LPCTSTR) m_sensors_output_file);
         switch(m_out_type)
         {
             case DETECTORS:
+				output_stream.open((LPCTSTR) m_sensors_output_file);
                 output_stream << writeDetectorsOutput() << std::endl;
                 break;
         }
         output_stream.close();
     }
+}
+
+void CNetwork::writeOtherOutput(void)
+{
+    if (m_out_type != NULL && write_others)
+    {
+        std::ofstream output_stream;
+        switch(m_out_type)
+        {
+            case DETECTORS:
+				output_stream.open((LPCTSTR) m_sensors_cum_output_file, std::ofstream::out | std::ofstream::app); // open for output and append
+                output_stream << writeDetectorsCountsOutput() << std::endl;
+                break;
+        }
+        output_stream.close();
+    }
+}
+
+std::string CNetwork::writeDetectorsCountsOutput(void)
+{
+	std::vector<std::string> rows;
+
+	// loop through the links
+    CLink* link = NULL;
+    POSITION pos = m_link_list.GetHeadPosition();
+    while (pos != NULL)
+    {      
+	    link = m_link_list.GetNext(pos);
+		// loop through the detectors
+		POSITION d_pos = NULL;
+		CDetector* detector = NULL;
+		d_pos = link->m_detector_list.GetHeadPosition();
+		while (d_pos != NULL)
+		{
+			detector = link->m_detector_list.GetNext(d_pos);
+			// create and store row
+			std::stringstream row;
+			row << detector->getId() << "\t" << detector->getCount();
+			rows.push_back(row.str());
+		}
+    }
+	rows.push_back("\n");
+	std::ostringstream out;
+    std::copy(rows.begin(), rows.end(), std::ostream_iterator<std::string>(out, "\n"));
+
+    return out.str();
 }
 
 std::string CNetwork::writeDetectorsOutput(void)
@@ -303,7 +354,7 @@ int CNetwork::readTRFLine(FILE* file, char* line)
 
 void CNetwork::getTimePeriods(FILE* file)
 {
-	if (is_log_active) {
+	if (is_log_active && log_level == 2) {
 		sprintf(out_buf, "Parsing %s ...", "time periods");
 		OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
 	}
@@ -333,7 +384,7 @@ void CNetwork::getTimePeriods(FILE* file)
 
 void CNetwork::getNodes(FILE* file)
 {
-	if (is_log_active) {
+	if (is_log_active && log_level == 2) {
 		sprintf(out_buf, "Parsing %s ...", "nodes");
 		OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
 	}
@@ -962,7 +1013,7 @@ void CNetwork::setDetectorCorsimId(CDetector* detector)
 
 void CNetwork::processDetectors(void)
 {
-    if (is_log_active) {
+    if (is_log_active && log_level == 2) {
         sprintf(out_buf, "Processing %s ...", "detectors");
         OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
     }
@@ -974,7 +1025,7 @@ void CNetwork::processDetectors(void)
     {
         link = m_link_list.GetNext(pos);
 
-        if (is_log_active) {
+        if (is_log_active && log_level == 2) {
             int out_len;
             out_len  = sprintf(out_buf, "Processing detectors on link (%d, %d) ...", link->getUpNode(), link->getDnNode());
             OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
@@ -998,12 +1049,24 @@ void CNetwork::printDetectorsTransitions(void)
 
 void CNetwork::printDetectorsCount(void)
 {
-    // get the count from each detector and save it in a *.txt
+    // get the count from each detector
     CLink* link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
     while (pos != NULL)
     {      
 	    link = m_link_list.GetNext(pos);
         link->printDetectorsCount();
-    } 
+    }
+}
+
+void CNetwork::resetDetectorsCount(void)
+{
+	// reset the count of each detector
+    CLink* link = NULL;
+    POSITION pos = m_link_list.GetHeadPosition();
+    while (pos != NULL)
+    {      
+	    link = m_link_list.GetNext(pos);
+        link->resetDetectorsCount();
+    }
 }

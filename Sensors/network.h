@@ -69,20 +69,24 @@ class CNetwork : public CObject
         void                            setDetectorCorsimId(CDetector* detector);
         void                            processDetectors(void);
         void                            printDetectorsCount(void);
+		void                            resetDetectorsCount(void);
         void                            printDetectorsTransitions(void);
 
         void                            setupOutputProcessor(OutputProcessor type);
         void                            writeOutput(void);
+		void							writeOtherOutput(void);
 
     private:
         // private methods
         int                             readTRFLine(FILE* file, char* line);
-        std::string                     writeDetectorsOutput();    
+        std::string                     writeDetectorsOutput();
+		std::string                     writeDetectorsCountsOutput();
 
         // private members
         CString                         m_network_name;
         CString                         m_traf_input_file;
         CString                         m_sensors_output_file;
+		CString							m_sensors_cum_output_file;
         OutputProcessor                 m_out_type;
         CTypedPtrList<CPtrList, CLink*> m_link_list;
         CTypedPtrList<CPtrList, CNode*> m_node_list;

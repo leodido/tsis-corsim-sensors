@@ -85,7 +85,7 @@ class CDetector : public CObject
         float                   m_activation_time;
         float                   m_deactivation_time;
         CList<int, int>         m_transition_list;
-       CString                  m_label;
+        CString                 m_label;
 };
 
 #endif // CDETECTOR

@@ -24,7 +24,9 @@
 
 #pragma once
 
+extern int log_level;
 extern bool is_log_active;
+extern bool write_others;
 
 // declare global variables related to time
 extern int end_of_init;

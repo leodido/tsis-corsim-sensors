@@ -53,6 +53,7 @@ class CLink : public CObject
       inline int                            getRightNode(void) { return m_right_node->getId(); }
 
 	  void                                  printDetectorsCount(void);
+	  void									resetDetectorsCount(void);
       void                                  printDetectorsTransitions(void);
 
 	  inline void                           addLane(CLane* lane) { m_lane_list.AddTail(lane); }
