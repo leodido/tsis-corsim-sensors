@@ -116,6 +116,8 @@ void CLink::processDetectors(void)
  
       // next 13 bits contain the vehicle count since start of simulation.
 	  num = det_info >> 10;
+	  // do not cumulate counts at each call
+	  num = num - detector->getCount();
 
       // bit array representing the activation/deactivation of the detector
       det = net_det_on[det_num];

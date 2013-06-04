@@ -84,7 +84,6 @@ DLL_EXPORT void __stdcall on_time_period_complete()
 		} else {
 			network->printDetectorsCount();
 		}
-		network->resetDetectorsCount();
 	}
 }
 
