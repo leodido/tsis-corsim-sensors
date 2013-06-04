@@ -182,7 +182,6 @@ std::string CNetwork::writeDetectorsCountsOutput(void)
 	// sorting
 	std::sort(rows.begin(), rows.end());
 	// final formatting
-	rows.push_back("\n");
 	std::ostringstream out;
     std::copy(rows.begin(), rows.end(), std::ostream_iterator<std::string>(out, "\n"));
 

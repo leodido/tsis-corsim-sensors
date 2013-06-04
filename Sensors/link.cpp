@@ -174,7 +174,11 @@ void CLink::resetDetectorsCount(void)
 	while (pos != NULL)
 	{
 		detector = m_detector_list.GetNext(pos);
+		//sprintf(out_buf, "Detecor: %d >> Old count: %d", detector->getId(), detector->getCount());
+		//OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
 		detector->setCount(0);
+		//sprintf(out_buf, "Detecor: %d >> New count: %d", detector->getId(), detector->getCount());
+		//OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
 	}
 }
 
