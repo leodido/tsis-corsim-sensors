@@ -8,6 +8,7 @@
 #include <iterator>
 #include <iomanip>
 #include <stdlib.h>
+#include <algorithm>
 
 #include "corsim.h"
 #include "netsim.h"
@@ -159,7 +160,6 @@ void CNetwork::writeOtherOutput(void)
 std::string CNetwork::writeDetectorsCountsOutput(void)
 {
 	std::vector<std::string> rows;
-
 	// loop through the links
     CLink* link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
@@ -179,6 +179,9 @@ std::string CNetwork::writeDetectorsCountsOutput(void)
 			rows.push_back(row.str());
 		}
     }
+	// sorting
+	std::sort(rows.begin(), rows.end());
+	// final formatting
 	rows.push_back("\n");
 	std::ostringstream out;
     std::copy(rows.begin(), rows.end(), std::ostream_iterator<std::string>(out, "\n"));
