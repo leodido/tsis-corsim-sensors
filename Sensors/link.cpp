@@ -38,6 +38,7 @@ CLink::CLink() : CObject()
                , m_lane_list()
                , m_detector_list()
 			   , m_preempt(false)
+			   , m_current_tp(1)
 {
    for (int lane = 0; lane < net_max_lanes; lane++)
    {
@@ -116,8 +117,6 @@ void CLink::processDetectors(void)
  
       // next 13 bits contain the vehicle count since start of simulation.
 	  num = det_info >> 10;
-	  // do not cumulate counts at each call
-	  num = num - detector->getCount();
 
       // bit array representing the activation/deactivation of the detector
       det = net_det_on[det_num];
@@ -167,20 +166,33 @@ void CLink::processDetectors(void)
    }
 }
 
-void CLink::resetDetectorsCount(void)
+void CLink::updateTimePeriodsDetectorsCount()
 {
+	int det_info = 0;
+	int num = 0;
+	// loop through the detectors
 	POSITION pos = NULL;
 	CDetector* detector = NULL;
-	// loop through the detectors
 	pos = m_detector_list.GetHeadPosition();
 	while (pos != NULL)
 	{
 		detector = m_detector_list.GetNext(pos);
-		//sprintf(out_buf, "Detecor: %d >> Old count: %d", detector->getId(), detector->getCount());
-		//OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+		det_info = net_det_mod[detector->getCorsimId()];
+		num = det_info >> 10;
+		detector->setTimePeriodVolume(num - detector->getTimePeriodLastVolume());
+	}
+}
+
+void CLink::resetDetectorsCount(void)
+{
+	// loop through the detectors
+	POSITION pos = NULL;
+	CDetector* detector = NULL;
+	pos = m_detector_list.GetHeadPosition();
+	while (pos != NULL)
+	{
+		detector = m_detector_list.GetNext(pos);
 		detector->setCount(0);
-		//sprintf(out_buf, "Detecor: %d >> New count: %d", detector->getId(), detector->getCount());
-		//OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
 	}
 }
 

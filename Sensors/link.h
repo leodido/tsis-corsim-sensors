@@ -67,6 +67,8 @@ class CLink : public CObject
       inline CLink*                         getOpposingLink() const { return m_opposing_link; }
       inline void                           setOpposingLink(CLink* link) { m_opposing_link = link; }
 
+	  void									updateTimePeriodsDetectorsCount(void);
+
       void                                  print(void);
 
    private:
@@ -92,6 +94,7 @@ class CLink : public CObject
       int                                   m_control_code[max_intervals];
       int                                   m_offset;
 	  bool                                  m_preempt;
+	  int									m_current_tp;
 
       int                                   m_opposing_node_id; // id of the upstream node of the link that opposes this link
       CLink*                                m_opposing_link; // pointer to the upstream node of the link that opposes this link

@@ -129,63 +129,72 @@ void CNetwork::writeOutput(void)
 {
     if (m_out_type != NULL)
     {
-        std::ofstream output_stream;
+        
         switch(m_out_type)
         {
             case DETECTORS:
+				std::ofstream output_stream;
 				output_stream.open((LPCTSTR) m_sensors_output_file);
                 output_stream << writeDetectorsOutput() << std::endl;
+				output_stream.close();
+				if (write_others) {
+					std::ofstream others_stream;
+					others_stream.open((LPCTSTR) m_sensors_cum_output_file);
+					others_stream << writeDetectorsCountsOutput() << std::endl;
+					others_stream.close();
+				}
                 break;
         }
-        output_stream.close();
+        
     }
 }
 
-void CNetwork::writeOtherOutput(void)
+void CNetwork::updateTimePeriodsDetectorsCount(void)
 {
-    if (m_out_type != NULL && write_others)
+	CLink* link = NULL;
+    POSITION pos = m_link_list.GetHeadPosition();
+    while (pos != NULL)
     {
-        std::ofstream output_stream;
-        switch(m_out_type)
-        {
-            case DETECTORS:
-				output_stream.open((LPCTSTR) m_sensors_cum_output_file, std::ofstream::out | std::ofstream::app); // open for output and append
-                output_stream << writeDetectorsCountsOutput() << std::endl;
-                break;
-        }
-        output_stream.close();
-    }
+		link = m_link_list.GetNext(pos);
+		link->updateTimePeriodsDetectorsCount();
+	}
 }
 
 std::string CNetwork::writeDetectorsCountsOutput(void)
 {
 	std::vector<std::string> rows;
-	// loop through the links
-    CLink* link = NULL;
-    POSITION pos = m_link_list.GetHeadPosition();
-    while (pos != NULL)
-    {      
-	    link = m_link_list.GetNext(pos);
-		// loop through the detectors
-		POSITION d_pos = NULL;
-		CDetector* detector = NULL;
-		d_pos = link->m_detector_list.GetHeadPosition();
-		while (d_pos != NULL)
-		{
-			detector = link->m_detector_list.GetNext(d_pos);
-			// create and store row
-			std::stringstream row;
-			row << detector->getId() << "\t" << detector->getCount();
-			rows.push_back(row.str());
+	int num_processed_detectors = 0;
+	// loop through the time periods
+	for (int i = 0; i < getTimePeriodsNum(); ++i) {
+		// loop through the links
+		CLink* link = NULL;
+		POSITION pos = m_link_list.GetHeadPosition();
+		while (pos != NULL) {      
+			link = m_link_list.GetNext(pos);
+			// loop through the detectors
+			CDetector* detector = NULL;
+			POSITION d_pos = link->m_detector_list.GetHeadPosition();
+			while (d_pos != NULL) {
+				detector = link->m_detector_list.GetNext(d_pos);
+				// create and store row
+				std::stringstream row;
+				row << detector->getId() << "\t" << detector->getTimePeriodVolume(i);
+				rows.push_back(row.str());
+			}
 		}
-    }
-	// sorting
-	std::sort(rows.begin(), rows.end());
+		// sorting
+		if (i == 0) {
+			std::sort(rows.begin(), rows.end());
+		} else {
+			std::sort(rows.begin() + num_processed_detectors, rows.end());
+		}
+		num_processed_detectors = rows.size();
+		rows.push_back("");
+	}
 	// final formatting
 	std::ostringstream out;
     std::copy(rows.begin(), rows.end(), std::ostream_iterator<std::string>(out, "\n"));
-
-    return out.str();
+	return out.str();
 }
 
 std::string CNetwork::writeDetectorsOutput(void)
@@ -278,7 +287,7 @@ void CNetwork::readInputFile()
         sprintf(out_buf, "Opened file: \"%s\".", m_traf_input_file);
         OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
 		// parse the time periods
-		getTimePeriods(file_trf);
+		processTimePeriods(file_trf);
 		rewind(file_trf);
         // create the node list
         getNodes(file_trf);
@@ -354,7 +363,7 @@ int CNetwork::readTRFLine(FILE* file, char* line)
     return card_type;
 }
 
-void CNetwork::getTimePeriods(FILE* file)
+void CNetwork::processTimePeriods(FILE* file)
 {
 	if (is_log_active && log_level == 2) {
 		sprintf(out_buf, "Parsing %s ...", "time periods");

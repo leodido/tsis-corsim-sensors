@@ -60,6 +60,9 @@ class CDetector : public CObject
       inline void               setCount(int count) { m_count = count; }
       inline void               incCount() { m_count += 1; }
       inline void               decCount() { m_count -= 1; }
+	  inline int				getTimePeriodVolume(int tp) { return m_tp_volume_list.GetAt(tp); }
+	  inline void				setTimePeriodVolume(int volume) { m_tp_volume_list.Add(volume); }
+	  int						getTimePeriodLastVolume(void);
 
       // activation/deactivation
       inline float              getActivationTime() const { return m_activation_time; }
@@ -85,6 +88,7 @@ class CDetector : public CObject
         float                   m_activation_time;
         float                   m_deactivation_time;
         CList<int, int>         m_transition_list;
+		CUIntArray				m_tp_volume_list;
         CString                 m_label;
 };
 

@@ -25,6 +25,7 @@ CDetector::CDetector() : CObject()
                        , m_activation_time(0.0f)
                        , m_deactivation_time(0.0f)
                        , m_transition_list()
+					   , m_tp_volume_list()
                        , m_label("")
 {
 }
@@ -43,6 +44,7 @@ CDetector::CDetector(int id, CLink* link, CLane* lane, DetectorType type, int le
                     , m_activation_time(0.0f)
                     , m_deactivation_time(0.0f)
                     , m_transition_list()
+					, m_tp_volume_list()
                     , m_label("")
 {
     char res[10] = { '\0' };
@@ -96,4 +98,14 @@ std::vector<std::string> CDetector::getTransitions(void)
         transitions.push_back(res);
     }
     return transitions;
+}
+
+int CDetector::getTimePeriodLastVolume(void)
+{
+	int pos = m_tp_volume_list.GetUpperBound();
+	if (pos == -1) {
+		return 0;
+	} else {
+		return m_tp_volume_list.GetAt(pos);
+	}
 }

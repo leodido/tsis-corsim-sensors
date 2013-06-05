@@ -51,7 +51,7 @@ class CNetwork : public CObject
         inline void                     setInputFile(const CString& name) { m_traf_input_file = name; }
         void                            readInputFile(void);
 
-		void							getTimePeriods(FILE* file);
+		void							processTimePeriods(FILE* file);
 
         void                            getNodes(FILE* file);
         CNode*                          findNode(int id);
@@ -74,7 +74,9 @@ class CNetwork : public CObject
 
         void                            setupOutputProcessor(OutputProcessor type);
         void                            writeOutput(void);
-		void							writeOtherOutput(void);
+
+		void							updateTimePeriodsDetectorsCount(void);
+		inline int						getTimePeriodsNum(void) { return m_tp_lengths.GetSize() ; }
 
     private:
         // private methods

@@ -76,14 +76,10 @@ DLL_EXPORT void __stdcall on_time_period_complete()
 		OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
 	}
 
-	if (is_log_active && log_level == 1) {
-		if (write_others) {
-			network->writeOtherOutput();
-			sprintf(out_buf, "Time period output file writed.");
-			OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
-		} else {
-			network->printDetectorsCount();
-		}
+	network->updateTimePeriodsDetectorsCount();
+
+	if (is_log_active && log_level == 2) {
+		network->printDetectorsCount();
 	}
 }
 
@@ -128,7 +124,7 @@ DLL_EXPORT void __stdcall on_simulation_complete()
 	sprintf(out_buf, "Called %s function.\n", "ON_SIMULATION_COMPLETE()");
 	OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
 	// write output sensors file
-    network->writeOutput();    
+    network->writeOutput();
 }
 
 DLL_EXPORT void __stdcall on_exit()
