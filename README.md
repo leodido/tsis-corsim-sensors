@@ -1,12 +1,12 @@
 # SENSORS
 
-This is a TSIS-CORSIM run-time extension ([RTE][]).
+This is a [TSIS-CORSIM][]™ RTE ([run-time extension][]).
 
-This repository contains code to compile a **DLL** that extends, at runtime, [TSIS-CORSIM][] (version [6.2][]), the _"Traffic Software Integrated System - Corridor Simulation system"_.
+This repository contains code to compile a **DLL** that extends, at runtime, TSIS-CORSIM™ (version [>=6.2][]), the _"Traffic Software Integrated System - Corridor Simulation system"_.
 
 ## GOAL
 
-To extend TSIS-CORSIM in order to provide the **tracking** and the **logging** of **fine-grained data of the detectors in each traffic simulation model created** with the aforementioned simulator.
+To extend TSIS-CORSIM™ in order to provide the **tracking** and the **logging** of **fine-grained data of the detectors in each traffic simulation model created** with the aforementioned simulator.
 
 ## DEPENDENCIES
 
@@ -49,6 +49,6 @@ Note that `$(DDK_directory)` is the path of your local **WinDDK** installation, 
 
 [guide]: http://bit.ly/mfc-in-visual-c-express
 [here]: http://www.hard-light.net/forums/index.php?topic=80725.0
-[RTE]: http://mctrans.ce.ufl.edu/featured/tsis/version6/CORSIMRTE.htm
-[6.2]: http://mctrans.ce.ufl.edu/featured/tsis/
+[run-time extension]: http://mctrans.ce.ufl.edu/featured/tsis/version6/CORSIMRTE.htm
+[>=6.2]: http://mctrans.ce.ufl.edu/featured/tsis/
 [TSIS-CORSIM]: http://ops.fhwa.dot.gov/trafficanalysistools/corsim.htm
