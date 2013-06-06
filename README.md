@@ -1,12 +1,18 @@
 # SENSORS
 
-This is a [TSIS-CORSIM][]™ RTE ([run-time extension][]).
+This is a [TSIS-CORSIM][]™ (Traffic Software Integrated System - Corridor Simulation) RTE ([run-time extension][]).
 
-This repository contains code to compile a **DLL** that extends, at runtime, TSIS-CORSIM™ (version [>=6.2][]), the _"Traffic Software Integrated System - Corridor Simulation system"_.
+This repository contains code to compile a **DLL** that extends, at runtime, TSIS-CORSIM™ ([version >= 6.2][]).
+
+## TSIS-CORSIM™
+
+TSIS™ is an IDE that enables users to conduct traffic operations analysis. Built using a component architecture, TSIS™ is a toolbox that contains tools that allow the user to define and manage traffic analysis projects, define traffic networks and create inputs for traffic simulation analysis, execute traffic simulation models, and interpret the results of those models.
+
+CORSIM™ is a comprehensive microscopic traffic simulation, applicable to surface streets, freeways, and integrated networks with a complete selection of control devices. It simulates traffic and traffic control systems using commonly accepted vehicle and driver behavior models. CORSIM™ combines and extends two of the most widely used traffic simulation models, NETSIM for surface streets, and FRESIM for freeways.
 
 ## GOAL
 
-To extend TSIS-CORSIM™ in order to provide the **tracking** and the **logging** of **fine-grained data of the detectors in each traffic simulation model created** with the aforementioned simulator.
+To extend TSIS-CORSIM™ in order to provide the **tracking** and the **logging** of **fine-grained data of the detectors of a simulation model** created and simulated with the aforementioned toolbox.
 
 ## DEPENDENCIES
 
@@ -50,5 +56,5 @@ Note that `$(DDK_directory)` is the path of your local **WinDDK** installation, 
 [guide]: http://bit.ly/mfc-in-visual-c-express
 [here]: http://www.hard-light.net/forums/index.php?topic=80725.0
 [run-time extension]: http://mctrans.ce.ufl.edu/featured/tsis/version6/CORSIMRTE.htm
-[>=6.2]: http://mctrans.ce.ufl.edu/featured/tsis/
+[version >= 6.2]: http://mctrans.ce.ufl.edu/featured/tsis/
 [TSIS-CORSIM]: http://ops.fhwa.dot.gov/trafficanalysistools/corsim.htm
