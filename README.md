@@ -14,6 +14,10 @@ CORSIM™ is a comprehensive microscopic traffic simulation, applicable to surface
 
 To extend TSIS-CORSIM™ in order to provide the **tracking** and the **logging** of **fine-grained data of the detectors of a simulation model** created and simulated with the aforementioned toolbox.
 
+### NOTES
+
+To generate the (correct) temporal log of all the transitions of the vehicles on the detectors of the road network it is necessary that the detectors are of the type "presence".
+
 ## DEPENDENCIES
 
 This code depends on, as well as `corsim.dll` and `corwin.lib` (included in the source), from the **MFC** and **ATL** libraries (because most of classes inherit from its `CObject` class).
