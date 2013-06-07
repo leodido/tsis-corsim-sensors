@@ -24,7 +24,7 @@ int prev_init = 0;
 int prev_time = 0;
 
 // initialize a pointer to the network object used by the functions in this file
-CNetwork* network = NULL;
+CNetwork *network = NULL;
 
 DLL_EXPORT void __stdcall on_initialize()
 {
@@ -44,7 +44,8 @@ DLL_EXPORT void __stdcall on_initialize()
     network->readInputFile();
 
     // print elements found
-    if (is_log_active && log_level == 2) {
+    if (is_log_active && log_level == 2)
+    {
         network->printNodes();
         // network->printLinks(); // FIXME: lancia un'eccezione
         // network->printLanes();
@@ -57,10 +58,11 @@ DLL_EXPORT void __stdcall on_initialize()
 
 DLL_EXPORT void __stdcall on_time_interval_complete()
 {
-	if (is_log_active && log_level == 2) {
-		sprintf(out_buf, "Called %s function execution.", "ON_TIME_INTERVAL_COMPLETE()");
-		OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
-	}
+    if (is_log_active && log_level == 2)
+    {
+        sprintf(out_buf, "Called %s function execution.", "ON_TIME_INTERVAL_COMPLETE()");
+        OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+    }
 
     bool init = is_init == 0 ? false : true;
     if (!init && is_log_active && log_level == 2)
@@ -71,24 +73,27 @@ DLL_EXPORT void __stdcall on_time_interval_complete()
 
 DLL_EXPORT void __stdcall on_time_period_complete()
 {
-	if (is_log_active && log_level == 1) {
-		sprintf(out_buf, "Called %s function execution.", "ON_TIME_PERIOD_COMPLETE()");
-		OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
-	}
+    if (is_log_active && log_level == 1)
+    {
+        sprintf(out_buf, "Called %s function execution.", "ON_TIME_PERIOD_COMPLETE()");
+        OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+    }
 
-	network->updateTimePeriodsDetectorsCount();
+    network->updateTimePeriodsDetectorsCount();
 
-	if (is_log_active && log_level == 2) {
-		network->printDetectorsCount();
-	}
+    if (is_log_active && log_level == 2)
+    {
+        network->printDetectorsCount();
+    }
 }
 
 DLL_EXPORT void __stdcall on_net_signal_pre()
 {
-	if (is_log_active && log_level == 2) {
-		sprintf(out_buf, "Called %s function execution.", "ON_NET_SIGNAL_PRE()");
-		OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
-	}
+    if (is_log_active && log_level == 2)
+    {
+        sprintf(out_buf, "Called %s function execution.", "ON_NET_SIGNAL_PRE()");
+        OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+    }
 
     // initialize the simulation time
     int sim_time = 0;
@@ -99,7 +104,7 @@ DLL_EXPORT void __stdcall on_net_signal_pre()
     {
         end_of_init = prev_time + 1; // end of initialization
     }
-   
+
     // adjust the time by adding the end of initialization
     sim_time = net_clock + end_of_init;
 
@@ -109,8 +114,9 @@ DLL_EXPORT void __stdcall on_net_signal_pre()
     // record whether the simulation has reached equilibrium or not, so the time at which initialization was over can be recorded
     prev_init = is_init;
     prev_time = sim_time;
-    
-    if (is_log_active && log_level == 2) {
+
+    if (is_log_active && log_level == 2)
+    {
         sprintf(out_buf , "\nCurrent total simulation time is %d sec.\n", sim_time);
         OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
     }
@@ -118,12 +124,13 @@ DLL_EXPORT void __stdcall on_net_signal_pre()
 
 DLL_EXPORT void __stdcall on_simulation_complete()
 {
-    if (is_log_active && log_level == 2) {
-		network->printDetectorsTransitions();
+    if (is_log_active && log_level == 2)
+    {
+        network->printDetectorsTransitions();
     }
-	sprintf(out_buf, "Called %s function.\n", "ON_SIMULATION_COMPLETE()");
-	OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
-	// write output sensors file
+    sprintf(out_buf, "Called %s function.\n", "ON_SIMULATION_COMPLETE()");
+    OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+    // write output sensors file
     network->writeOutput();
 }
 

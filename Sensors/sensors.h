@@ -1,4 +1,4 @@
-/*****************************************************************************************
+/*******************************************************************************
     Copyright 2013 Leonardo Di Donato
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -10,14 +10,14 @@
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and 
+    See the License for the specific language governing permissions and
     limitations under the License.
 
     Application: tsis-corsim-sensors
 
     Description:
     Entry point header file.
-*****************************************************************************************/
+********************************************************************************/
 
 #ifndef SENSORS
 #define SENSORS
@@ -42,7 +42,8 @@ using namespace std;
 #define DTTMFMT "_%Y%m%d_%H%M%S"
 #define DTTMSZ 17 // must allow extra character for the null terminator
 
-static char* getDateTime(char* buff) {
+static char *getDateTime(char *buff)
+{
     time_t t = time (0);
     strftime(buff, DTTMSZ, DTTMFMT, localtime (&t));
     return buff;

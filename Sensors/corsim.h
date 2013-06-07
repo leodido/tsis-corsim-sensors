@@ -1,5 +1,4 @@
-
-/*****************************************************************************************
+/*******************************************************************************
     Copyright 2013 Leonardo Di Donato
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,7 +10,7 @@
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and 
+    See the License for the specific language governing permissions and
     limitations under the License.
 
     Application: tsis-corsim-sensors
@@ -19,7 +18,7 @@
     Description:
     Definition of macros that make easier the process (import and export)
     of interfacing between CORSIM and a RTE.
-*****************************************************************************************/
+********************************************************************************/
 
 #ifndef CORSIM_RTE_INTERFACE
 #define CORSIM_RTE_INTERFACE

@@ -2,7 +2,7 @@
 #include "integer.h"
 
 CInteger::CInteger() : CObject()
-                     , data(0)
+    , data(0)
 {
 }
 

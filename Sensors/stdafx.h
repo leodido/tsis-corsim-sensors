@@ -1,4 +1,4 @@
-/*****************************************************************************************
+/*******************************************************************************
     Copyright 2013 Leonardo Di Donato
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -10,14 +10,14 @@
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and 
+    See the License for the specific language governing permissions and
     limitations under the License.
 
     Application: tsis-corsim-sensors
 
     Description:
     Inclusion of MFC components.
-*****************************************************************************************/
+********************************************************************************/
 
 #ifndef STDAFX
 #define STDAFX
@@ -33,7 +33,7 @@
 #include <afxtempl.h>           // MFC templates
 
 #ifndef _AFX_NO_OLE_SUPPORT
-#include <afxdisp.h>			// MFC automation classes
+#include <afxdisp.h>            // MFC automation classes
 #endif // _AFX_NO_OLE_SUPPORT
 
 #pragma warning(pop)            // stop disable warnings

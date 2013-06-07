@@ -13,39 +13,39 @@
 #include "link.h"
 
 CDetector::CDetector() : CObject()
-                       , m_id(0)
-                       , m_corsim_id(0)
-                       , m_link(NULL)
-                       , m_lane(NULL)
-                       , m_type(presence)
-                       , m_length(0)
-                       , m_dist_from_dw_node(0)
-                       , m_state(false)
-                       , m_count(0)
-                       , m_activation_time(0.0f)
-                       , m_deactivation_time(0.0f)
-                       , m_transition_list()
-					   , m_tp_volume_list()
-                       , m_label("")
+    ,   m_id(0)
+    ,   m_corsim_id(0)
+    ,   m_link(NULL)
+    ,   m_lane(NULL)
+    ,   m_type(presence)
+    ,   m_length(0)
+    ,   m_dist_from_dw_node(0)
+    ,   m_state(false)
+    ,   m_count(0)
+    ,   m_activation_time(0.0f)
+    ,   m_deactivation_time(0.0f)
+    ,   m_transition_list()
+    ,   m_tp_volume_list()
+    ,   m_label("")
 {
 }
 
-CDetector::CDetector(int id, CLink* link, CLane* lane, DetectorType type, int length, int distance)
-                    : CObject()
-                    , m_id(id)
-                    , m_corsim_id(0)
-                    , m_link(link)
-                    , m_lane(lane)
-                    , m_type(type)
-                    , m_length(length)
-                    , m_dist_from_dw_node(distance)
-                    , m_state(false)
-                    , m_count(0)
-                    , m_activation_time(0.0f)
-                    , m_deactivation_time(0.0f)
-                    , m_transition_list()
-					, m_tp_volume_list()
-                    , m_label("")
+CDetector::CDetector(int id, CLink *link, CLane *lane, DetectorType type, int length, int distance)
+    :   CObject()
+    ,   m_id(id)
+    ,   m_corsim_id(0)
+    ,   m_link(link)
+    ,   m_lane(lane)
+    ,   m_type(type)
+    ,   m_length(length)
+    ,   m_dist_from_dw_node(distance)
+    ,   m_state(false)
+    ,   m_count(0)
+    ,   m_activation_time(0.0f)
+    ,   m_deactivation_time(0.0f)
+    ,   m_transition_list()
+    ,   m_tp_volume_list()
+    ,   m_label("")
 {
     char res[10] = { '\0' };
     sprintf(res, "D%d", m_id);
@@ -98,14 +98,4 @@ std::vector<std::string> CDetector::getTransitions(void)
         transitions.push_back(res);
     }
     return transitions;
-}
-
-int CDetector::getTimePeriodLastVolume(void)
-{
-	int pos = m_tp_volume_list.GetUpperBound();
-	if (pos == -1) {
-		return 0;
-	} else {
-		return m_tp_volume_list.GetAt(pos);
-	}
 }

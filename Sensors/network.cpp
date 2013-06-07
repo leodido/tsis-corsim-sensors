@@ -22,58 +22,57 @@
 #include "detector.h"
 #include "commons.h"
 
-CNetwork::CNetwork() : CObject()
-                     , m_network_name("")
-                     , m_traf_input_file("")
-                     , m_sensors_output_file("")
-					 , m_sensors_cum_output_file("")
-                     , m_out_type(NO)
-                     , m_link_list()
-                     , m_node_list()
-					 , m_tp_lengths()
+CNetwork::CNetwork()    :   CObject()
+    ,   m_network_name("")
+    ,   m_traf_input_file("")
+    ,   m_sensors_output_file("")
+    ,   m_sensors_cum_output_file("")
+    ,   m_out_type(NO)
+    ,   m_link_list()
+    ,   m_node_list()
+    ,   m_tp_lengths()
 {
-   // default ctor
+    // default ctor
 }
 
-CNetwork::CNetwork(const CString& input_traf_file_name)
-                  : CObject()
-                  , m_network_name("")
-                  , m_traf_input_file(input_traf_file_name)
-                  , m_sensors_output_file("")
-                  , m_out_type(NO)
-                  , m_link_list()
-                  , m_node_list()
-				  , m_tp_lengths()
+CNetwork::CNetwork(const CString &input_traf_file_name) :   CObject()
+    ,   m_network_name("")
+    ,   m_traf_input_file(input_traf_file_name)
+    ,   m_sensors_output_file("")
+    ,   m_out_type(NO)
+    ,   m_link_list()
+    ,   m_node_list()
+    ,   m_tp_lengths()
 {
     char buff[DTTMSZ];
-	char path_buffer[_MAX_PATH];
-	char drive[_MAX_DRIVE];
-	char dir[_MAX_DIR];
-	char base_name[_MAX_FNAME];
-	errno_t err;
+    char path_buffer[_MAX_PATH];
+    char drive[_MAX_DRIVE];
+    char dir[_MAX_DIR];
+    char base_name[_MAX_FNAME];
+    errno_t err;
 
-	err = _splitpath_s(m_traf_input_file, drive, _MAX_DRIVE, dir, _MAX_DIR, base_name, _MAX_FNAME, NULL, NULL);
-	if (err != 0)
-	{
-		printf("Error splitting the path. Error code %d.\n", err);
-		exit(1);
-	}
-	err = _makepath_s(path_buffer, _MAX_PATH, drive, dir, base_name, NULL);
-	if (err != 0)
-	{
-		printf("Error creating path. Error code %d.\n", err);
-		exit(1);
-	}
+    err = _splitpath_s(m_traf_input_file, drive, _MAX_DRIVE, dir, _MAX_DIR, base_name, _MAX_FNAME, NULL, NULL);
+    if (err != 0)
+    {
+        printf("Error splitting the path. Error code %d.\n", err);
+        exit(1);
+    }
+    err = _makepath_s(path_buffer, _MAX_PATH, drive, dir, base_name, NULL);
+    if (err != 0)
+    {
+        printf("Error creating path. Error code %d.\n", err);
+        exit(1);
+    }
     m_sensors_output_file  = path_buffer;
     m_sensors_output_file += _T(getDateTime(buff));
-	m_sensors_cum_output_file = m_sensors_output_file;
+    m_sensors_cum_output_file = m_sensors_output_file;
 }
 
 CNetwork::~CNetwork()
 {
     POSITION pos = NULL;
-    CNode* node = NULL;
-    CLink* link = NULL;
+    CNode *node = NULL;
+    CLink *link = NULL;
     // delete the link list
     pos = m_link_list.GetHeadPosition();
     while (pos != NULL)
@@ -94,33 +93,34 @@ CNetwork::~CNetwork()
 
 void CNetwork::setupOutputProcessor(OutputProcessor type)
 {
-    switch(type)
+    switch (type)
     {
-        case DETECTORS:
-            m_sensors_output_file += _T("_sensors.csv");
-			m_sensors_cum_output_file += _T("_sensors_counts.tsv");
-			// if (log_is_active)
-			sprintf(out_buf, "Output file: \"%s\".", m_sensors_output_file);
-			OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
-			if (write_others) {
-				sprintf(out_buf, "Counts file: \"%s\".", m_sensors_cum_output_file);
-				OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
-			}
-            break;
-        case LINKS:
-            m_sensors_output_file += _T("_links.csv");
-            break;
-        case NODES:
-            m_sensors_output_file += _T("_nodes.csv");
-            break;
-        case LANES:
-            m_sensors_output_file += _T("_lanes.csv");
-            break;
-        case ALL:
-            m_sensors_output_file += _T("_complete_report.csv");
-            break;
-        default:
-            break;
+    case DETECTORS:
+        m_sensors_output_file += _T("_sensors.csv");
+        m_sensors_cum_output_file += _T("_sensors_counts.tsv");
+        // if (log_is_active)
+        sprintf(out_buf, "Output file: \"%s\".", m_sensors_output_file);
+        OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+        if (write_others)
+        {
+            sprintf(out_buf, "Counts file: \"%s\".", m_sensors_cum_output_file);
+            OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+        }
+        break;
+    case LINKS:
+        m_sensors_output_file += _T("_links.csv");
+        break;
+    case NODES:
+        m_sensors_output_file += _T("_nodes.csv");
+        break;
+    case LANES:
+        m_sensors_output_file += _T("_lanes.csv");
+        break;
+    case ALL:
+        m_sensors_output_file += _T("_complete_report.csv");
+        break;
+    default:
+        break;
     }
     m_out_type = type;
 }
@@ -129,96 +129,103 @@ void CNetwork::writeOutput(void)
 {
     if (m_out_type != NULL)
     {
-        
-        switch(m_out_type)
+
+        switch (m_out_type)
         {
-            case DETECTORS:
-				std::ofstream output_stream;
-				output_stream.open((LPCTSTR) m_sensors_output_file);
-                output_stream << writeDetectorsOutput() << std::endl;
-				output_stream.close();
-				if (write_others) {
-					std::ofstream others_stream;
-					others_stream.open((LPCTSTR) m_sensors_cum_output_file);
-					others_stream << writeDetectorsCountsOutput() << std::endl;
-					others_stream.close();
-				}
-                break;
+        case DETECTORS:
+            std::ofstream output_stream;
+            output_stream.open((LPCTSTR) m_sensors_output_file);
+            output_stream << writeDetectorsOutput() << std::endl;
+            output_stream.close();
+            if (write_others)
+            {
+                std::ofstream others_stream;
+                others_stream.open((LPCTSTR) m_sensors_cum_output_file);
+                others_stream << writeDetectorsCountsOutput() << std::endl;
+                others_stream.close();
+            }
+            break;
         }
-        
+
     }
 }
 
 void CNetwork::updateTimePeriodsDetectorsCount(void)
 {
-	CLink* link = NULL;
+    CLink *link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
     while (pos != NULL)
     {
-		link = m_link_list.GetNext(pos);
-		link->updateTimePeriodsDetectorsCount();
-	}
+        link = m_link_list.GetNext(pos);
+        link->updateTimePeriodsDetectorsCount();
+    }
 }
 
 std::string CNetwork::writeDetectorsCountsOutput(void)
 {
-	std::vector<std::string> rows;
-	int num_processed_detectors = 0;
-	// loop through the time periods
-	for (int i = 0; i < getTimePeriodsNum(); ++i) {
-		// loop through the links
-		CLink* link = NULL;
-		POSITION pos = m_link_list.GetHeadPosition();
-		while (pos != NULL) {      
-			link = m_link_list.GetNext(pos);
-			// loop through the detectors
-			CDetector* detector = NULL;
-			POSITION d_pos = link->m_detector_list.GetHeadPosition();
-			while (d_pos != NULL) {
-				detector = link->m_detector_list.GetNext(d_pos);
-				// create and store row
-				std::stringstream row;
-				row << detector->getId() << "\t" << detector->getTimePeriodVolume(i);
-				rows.push_back(row.str());
-			}
-		}
-		// sorting
-		if (i == 0) {
-			std::sort(rows.begin(), rows.end());
-		} else {
-			std::sort(rows.begin() + num_processed_detectors, rows.end());
-		}
-		num_processed_detectors = rows.size();
-		rows.push_back("");
-	}
-	// final formatting
-	std::ostringstream out;
+    std::vector<std::string> rows;
+    int num_processed_detectors = 0;
+    // loop through the time periods
+    for (int i = 0; i < getTimePeriodsNum(); ++i)
+    {
+        // loop through the links
+        CLink *link = NULL;
+        POSITION pos = m_link_list.GetHeadPosition();
+        while (pos != NULL)
+        {
+            link = m_link_list.GetNext(pos);
+            // loop through the detectors
+            CDetector *detector = NULL;
+            POSITION d_pos = link->m_detector_list.GetHeadPosition();
+            while (d_pos != NULL)
+            {
+                detector = link->m_detector_list.GetNext(d_pos);
+                // create and store row
+                std::stringstream row;
+                row << detector->getId() << "\t" << detector->getTimePeriodVolume(i);
+                rows.push_back(row.str());
+            }
+        }
+        // sorting
+        if (i == 0)
+        {
+            std::sort(rows.begin(), rows.end());
+        }
+        else
+        {
+            std::sort(rows.begin() + num_processed_detectors, rows.end());
+        }
+        num_processed_detectors = rows.size();
+        rows.push_back("");
+    }
+    // final formatting
+    std::ostringstream out;
     std::copy(rows.begin(), rows.end(), std::ostream_iterator<std::string>(out, "\n"));
-	return out.str();
+    return out.str();
 }
 
 std::string CNetwork::writeDetectorsOutput(void)
 {
-	std::vector<std::string> rows;
+    std::vector<std::string> rows;
     int row = 0;
     int num_det = 0;
-	int current_tp = 1;
-	// counting the digits of the total time of simulation (and so of tracking/tracing)
-	long n_digits = 1, calc = 0;
-	bool finished = false;
-	calc = net_clock;
-	while (!finished)
+    int current_tp = 1;
+    // counting the digits of the total time of simulation (and so of tracking/tracing)
+    long n_digits = 1, calc = 0;
+    bool finished = false;
+    calc = net_clock;
+    while (!finished)
     {
-		calc /= 10;
+        calc /= 10;
         if (calc != 0)
             n_digits++;
         else
             finished = true;
-	}
-	int decsecs_prec = 5;
-	int secs_prec = decsecs_prec + 1 + n_digits;
+    }
+    int decsecs_prec = 5;
+    int secs_prec = decsecs_prec + 1 + n_digits;
     // loop through the links
-    CLink* link = NULL;
+    CLink *link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
     while (pos != NULL)
     {
@@ -227,7 +234,7 @@ std::string CNetwork::writeDetectorsOutput(void)
         POSITION det_pos = link->m_detector_list.GetHeadPosition();
         while (det_pos != NULL)
         {
-            CDetector* detector = link->m_detector_list.GetNext(det_pos);
+            CDetector *detector = link->m_detector_list.GetNext(det_pos);
             // create the header
             std::stringstream header;
             if (num_det == 0)
@@ -241,36 +248,38 @@ std::string CNetwork::writeDetectorsOutput(void)
                 rows[0] = header.str();
             }
             // loop through the detector transitions
-			int prev_tp_elapsed_decsecs = 0;
-			int curr_tp_elapsed_decsecs = 0;
+            int prev_tp_elapsed_decsecs = 0;
+            int curr_tp_elapsed_decsecs = 0;
             std::vector<std::string> transitions = detector->getTransitions();
-            for (unsigned i = 0; i < transitions.size(); i++) {
+            for (unsigned i = 0; i < transitions.size(); i++)
+            {
                 std::stringstream t_row;
                 if (num_det == 0)
                 {
-					double time_d = (double) (i + 1) / 10;
-					std::stringstream time;
+                    double time_d = (double) (i + 1) / 10;
+                    std::stringstream time;
                     time << setw(secs_prec) << setprecision(decsecs_prec) << fixed << time_d;
-					t_row << time.str() << "," << current_tp << "," << transitions.at(i);
+                    t_row << time.str() << "," << current_tp << "," << transitions.at(i);
                     rows.push_back(t_row.str());
 
-					//curr_tp_elapsed_decsecs = i;
-					int curr_tp_secs = m_tp_lengths.GetAt(current_tp - 1);
-					curr_tp_elapsed_decsecs = i - prev_tp_elapsed_decsecs;
-					if (curr_tp_elapsed_decsecs + 1 >= curr_tp_secs * 10) {
-						prev_tp_elapsed_decsecs = prev_tp_elapsed_decsecs + curr_tp_elapsed_decsecs + 1;
-						current_tp = current_tp + 1;
-					}
+                    //curr_tp_elapsed_decsecs = i;
+                    int curr_tp_secs = m_tp_lengths.GetAt(current_tp - 1);
+                    curr_tp_elapsed_decsecs = i - prev_tp_elapsed_decsecs;
+                    if (curr_tp_elapsed_decsecs + 1 >= curr_tp_secs * 10)
+                    {
+                        prev_tp_elapsed_decsecs = prev_tp_elapsed_decsecs + curr_tp_elapsed_decsecs + 1;
+                        current_tp = current_tp + 1;
+                    }
                 }
                 else if (num_det > 0)
                 {
                     t_row << rows.at(i + 1) << "," << transitions.at(i);
                     rows[i + 1] = t_row.str();
-                }                
+                }
             }
             num_det += 1;
         }
-        row += 1;
+        row = row + 1;
     }
     std::ostringstream out;
     std::copy(rows.begin(), rows.end(), std::ostream_iterator<std::string>(out, "\n"));
@@ -281,14 +290,14 @@ std::string CNetwork::writeDetectorsOutput(void)
 void CNetwork::readInputFile()
 {
     // open the TRAF file
-    FILE* file_trf = NULL;
+    FILE *file_trf = NULL;
     if (file_trf = fopen(m_traf_input_file, "r"))
     {
         sprintf(out_buf, "Opened file: \"%s\".", m_traf_input_file);
         OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
-		// parse the time periods
-		processTimePeriods(file_trf);
-		rewind(file_trf);
+        // parse the time periods
+        processTimePeriods(file_trf);
+        rewind(file_trf);
         // create the node list
         getNodes(file_trf);
         rewind(file_trf);
@@ -298,14 +307,14 @@ void CNetwork::readInputFile()
         // find the opposing link for each link, if one exists
         int up = 0;
         int down = 0;
-        CLink* link = NULL;
+        CLink *link = NULL;
         POSITION pos = m_link_list.GetHeadPosition();
         while (pos != NULL)
         {
             link = m_link_list.GetNext(pos);
             up = link->getOpposingNodeId();
             down = link->m_dn_node->getId();
-            CLink* opposing = NULL;
+            CLink *opposing = NULL;
             opposing = findLink(up, down);
             link->setOpposingLink(opposing);
         }
@@ -320,7 +329,7 @@ void CNetwork::readInputFile()
     }
 }
 
-int CNetwork::readTRFLine(FILE* file, char* line)
+int CNetwork::readTRFLine(FILE *file, char *line)
 {
     // NOTE: to use this function properly, the caller must ensure that line is allocated with at least 81 character
     int card_type = -1; // card type -1 = failed to read line
@@ -363,46 +372,50 @@ int CNetwork::readTRFLine(FILE* file, char* line)
     return card_type;
 }
 
-void CNetwork::processTimePeriods(FILE* file)
+void CNetwork::processTimePeriods(FILE *file)
 {
-	if (is_log_active && log_level == 2) {
-		sprintf(out_buf, "Parsing %s ...", "time periods");
-		OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
-	}
-	// get the node information from the TRAF file and create the node list
-    char line[81] = { '\0' };
-	int card_type = 0;
-	// read data records from the TRAF file
-    while (!feof(file))
+    if (is_log_active && log_level == 2)
     {
-		// read a line of the file
-        card_type = readTRFLine(file, line);
-		// parse the line based on its card type
-        if (card_type == 3)
-        {
-			for (int tp = 0; tp < tp_max_num; tp++) {
-				char curr_tp_duration[5] = { '\0' };
-				// extract the duration of current time period
-				strncpy_s(curr_tp_duration, line + (tp * 4), 4);
-				int seconds = atoi(curr_tp_duration);
-				if (seconds > 0) {
-					m_tp_lengths.Add(seconds);
-				}
-			}
-		}
-	}
-}
-
-void CNetwork::getNodes(FILE* file)
-{
-	if (is_log_active && log_level == 2) {
-		sprintf(out_buf, "Parsing %s ...", "nodes");
-		OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
-	}
+        sprintf(out_buf, "Parsing %s ...", "time periods");
+        OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+    }
     // get the node information from the TRAF file and create the node list
     char line[81] = { '\0' };
     int card_type = 0;
-    CNode* node = NULL;
+    // read data records from the TRAF file
+    while (!feof(file))
+    {
+        // read a line of the file
+        card_type = readTRFLine(file, line);
+        // parse the line based on its card type
+        if (card_type == 3)
+        {
+            for (int tp = 0; tp < tp_max_num; tp++)
+            {
+                char curr_tp_duration[5] = { '\0' };
+                // extract the duration of current time period
+                strncpy_s(curr_tp_duration, line + (tp * 4), 4);
+                int seconds = atoi(curr_tp_duration);
+                if (seconds > 0)
+                {
+                    m_tp_lengths.Add(seconds);
+                }
+            }
+        }
+    }
+}
+
+void CNetwork::getNodes(FILE *file)
+{
+    if (is_log_active && log_level == 2)
+    {
+        sprintf(out_buf, "Parsing %s ...", "nodes");
+        OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
+    }
+    // get the node information from the TRAF file and create the node list
+    char line[81] = { '\0' };
+    int card_type = 0;
+    CNode *node = NULL;
     POSITION pos = NULL;
     int  node_id = 0;
     char node_ids[5] = { '\0' };
@@ -476,51 +489,51 @@ void CNetwork::getNodes(FILE* file)
     pos = m_node_list.GetHeadPosition();
     while (pos != NULL)
     {
-      inode_id = 0;
-      found = false;
-      node = m_node_list.GetNext(pos);
-      while ((inode_id < IMXNOD) && (!found))
-      {
-         if (node->getId() == net_node_num[inode_id])
-         {
-            found = true;
-            node->setCorsimId(inode_id);
-         }
-         inode_id++;
-      }
-   }
+        inode_id = 0;
+        found = false;
+        node = m_node_list.GetNext(pos);
+        while ((inode_id < IMXNOD) && (!found))
+        {
+            if (node->getId() == net_node_num[inode_id])
+            {
+                found = true;
+                node->setCorsimId(inode_id);
+            }
+            inode_id++;
+        }
+    }
 }
 
 void CNetwork::printNodes(void)
 {
-    CNode* node = NULL;
+    CNode *node = NULL;
     POSITION pos = m_node_list.GetHeadPosition();
     while (pos != NULL)
-    {      
-	    node = m_node_list.GetNext(pos);
+    {
+        node = m_node_list.GetNext(pos);
         node->print();
-    } 
+    }
 }
 
 // FIXME: lancia eccezione
 void CNetwork::printLinks(void)
 {
-    CLink* link = NULL;
+    CLink *link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
     while (pos != NULL)
-    {      
-	    link = m_link_list.GetNext(pos);
+    {
+        link = m_link_list.GetNext(pos);
         link->print();
-    } 
+    }
 }
 
-void CNetwork::getLinks(FILE* file)
+void CNetwork::getLinks(FILE *file)
 {
     // get the information about the links in the TRAF file and create the link list
     char line[81] = { '\0' };
     int card_type = 0;
     int index = 0;
-    CLink* link = NULL;
+    CLink *link = NULL;
     // link data
     char up[5] = { '\0' };
     char dn[5] = { '\0' };
@@ -600,7 +613,7 @@ void CNetwork::getLinks(FILE* file)
                 link->m_length = atoi(length);
                 link->m_free_flow_speed = atoi(speed);
                 if (link->m_free_flow_speed == 0)
-                   link->m_free_flow_speed = 44;
+                    link->m_free_flow_speed = 44;
                 link->m_up_node = findNode(atoi(up));
                 link->m_dn_node = findNode(atoi(dn));
                 link->m_thru_node = findNode(atoi(th));
@@ -615,19 +628,19 @@ void CNetwork::getLinks(FILE* file)
                     link->m_str_channel_code[index] = _T(ch[index][1]);
                 }
                 m_link_list.AddTail(link);
-         }
-      }
-      else if (card_type > 11)
-      {
-         // because corsim expects the cards to be in ascending order by card type, we can jump out of the loop as soon as we encounter a card type greater than 11
-         break;
-      }
-   }
+            }
+        }
+        else if (card_type > 11)
+        {
+            // because corsim expects the cards to be in ascending order by card type, we can jump out of the loop as soon as we encounter a card type greater than 11
+            break;
+        }
+    }
 }
 
-CLink* CNetwork::findLink(int up, int dn)
+CLink *CNetwork::findLink(int up, int dn)
 {
-    CLink* link = NULL;
+    CLink *link = NULL;
     // finds the link between nodes (up, dn)
     bool found = false;
     POSITION pos_link = m_link_list.GetHeadPosition();
@@ -642,11 +655,11 @@ CLink* CNetwork::findLink(int up, int dn)
         return NULL;
 }
 
-CNode* CNetwork::findNode(int id)
+CNode *CNetwork::findNode(int id)
 {
     // find the node id in the node list
     bool found = false;
-    CNode* node = NULL;
+    CNode *node = NULL;
     POSITION pos = m_node_list.GetHeadPosition();
     while ((pos != NULL) && (!found))
     {
@@ -682,7 +695,7 @@ int CNetwork::getLinkCorsimId(int upnode, int dnnode)
     return id;
 }
 
-void CNetwork::createLanes(FILE* file)
+void CNetwork::createLanes(FILE *file)
 {
     // create the lanes
     char line[81] = { '\0' };
@@ -691,8 +704,8 @@ void CNetwork::createLanes(FILE* file)
     int last_id = 0;
     bool found = false;
     POSITION pos = NULL;
-    CLink* link = NULL;
-    CLane* lane = NULL;
+    CLink *link = NULL;
+    CLane *lane = NULL;
     CString channel_code;
     // lane data
     char up[5] = { '\0' };
@@ -833,17 +846,17 @@ void CNetwork::createLanes(FILE* file)
     }
 }
 
-void CNetwork::getDetectors(FILE* file)
+void CNetwork::getDetectors(FILE *file)
 {
     // read the detectors information from the TRAF input file and create the detector list
     char line[81] = { '\0' };
     int card_type = 0;
     int index = 0;
     bool found = false;
-    CLink* clink = NULL;
-    CLane* clane = NULL;
+    CLink *clink = NULL;
+    CLane *clane = NULL;
     POSITION pos_link = NULL;
-    CDetector* detector = NULL;
+    CDetector *detector = NULL;
     // detector data
     char up[5] = { '\0' };
     char dn[5] = { '\0' };
@@ -920,7 +933,7 @@ void CNetwork::getDetectors(FILE* file)
                     clane->addDetector(detector);
             }
         }
-        else if(card_type > 42)
+        else if (card_type > 42)
         {
             // because corsim expects the cards to be in ascending order by card type, we can jump out of the loop as soon as we encounter a card type greater than 42
             break;
@@ -928,12 +941,12 @@ void CNetwork::getDetectors(FILE* file)
     }
 }
 
-void CNetwork::setDetectorCorsimId(CDetector* detector)
+void CNetwork::setDetectorCorsimId(CDetector *detector)
 {
     // finds the corsim detector id for the specified detector and sets it in the detector object
     int distance = detector->getDistance();
-    CLink* link = detector->getLink();
-    CLane* lane = detector->getLane();
+    CLink *link = detector->getLink();
+    CLane *lane = detector->getLane();
     int lane_id = lane->getId();
     int det_id = detector->getId();
     // get the id of the first detector on the same link as detector
@@ -948,68 +961,68 @@ void CNetwork::setDetectorCorsimId(CDetector* detector)
     this_id = net_det_id[id - 1];
     if ((distance == this_distance) && (det_id == this_id))
     {
-	    while (!found && tmp < 2)
-	    {
-		    this_lane = net_det_lane[2 * id - 2 + tmp];
-		    found = false;
-		    if (lane_id == this_lane)
-			    found = true;
-		    else if (this_lane == 9)
-			    found = true;
-		    else if (this_lane == 8)
-		    {
-			    int left = link->m_left_turn_bays_num;
-			    int right = link->m_right_turn_bays_num;
-			    int nfull = 7 - left - right;
-			    if (lane_id > 0 && lane_id <= nfull)
-				    found = true;
-			    else if (lane_id > 7)
-				    found = true;
-		    }
-		    else if (this_lane == 10 && lane_id == 8)
-			    found = true;
-		    else if (this_lane == 11 && lane_id == 9)
-			    found = true;
-		    tmp++;
-	    }
+        while (!found && tmp < 2)
+        {
+            this_lane = net_det_lane[2 * id - 2 + tmp];
+            found = false;
+            if (lane_id == this_lane)
+                found = true;
+            else if (this_lane == 9)
+                found = true;
+            else if (this_lane == 8)
+            {
+                int left = link->m_left_turn_bays_num;
+                int right = link->m_right_turn_bays_num;
+                int nfull = 7 - left - right;
+                if (lane_id > 0 && lane_id <= nfull)
+                    found = true;
+                else if (lane_id > 7)
+                    found = true;
+            }
+            else if (this_lane == 10 && lane_id == 8)
+                found = true;
+            else if (this_lane == 11 && lane_id == 9)
+                found = true;
+            tmp++;
+        }
     }
     tmp = 0;
     while (!found && id > 0)
     {
         // not found so get the next detector on this link and compare again
-        id = net_det_link[id-1];
-	    if (id > 0)
-	    {
-		    this_distance = net_det_pos[id - 1] / 10;
-		    this_id = net_det_id[id - 1];
-		    if ((distance == this_distance) && (det_id == this_id))
-		    {
-			    while (!found && tmp < 2)
-			    {
-				    this_lane = net_det_lane[2 * id - 2 + tmp];
-				    found = false;
-				    if (lane_id == this_lane)
-					    found = true;
-				    else if (this_lane == 9)
-					    found = true;
-				    else if(this_lane == 8)
-				    {
-					    int left = link->m_left_turn_bays_num;
-					    int right = link->m_right_turn_bays_num;
-					    int nfull = 7 - left - right;
-					    if (lane_id > 0 && lane_id <= nfull)
-						    found = true;
-					    else if (lane_id > 7)
-						    found = true;
-				    }
-				    else if (this_lane == 10 && lane_id == 8)
-					    found = true;
-				    else if (this_lane == 11 && lane_id == 9)
-					    found = true;
-				    tmp++;
-			    }
-		    }
-	    }
+        id = net_det_link[id - 1];
+        if (id > 0)
+        {
+            this_distance = net_det_pos[id - 1] / 10;
+            this_id = net_det_id[id - 1];
+            if ((distance == this_distance) && (det_id == this_id))
+            {
+                while (!found && tmp < 2)
+                {
+                    this_lane = net_det_lane[2 * id - 2 + tmp];
+                    found = false;
+                    if (lane_id == this_lane)
+                        found = true;
+                    else if (this_lane == 9)
+                        found = true;
+                    else if (this_lane == 8)
+                    {
+                        int left = link->m_left_turn_bays_num;
+                        int right = link->m_right_turn_bays_num;
+                        int nfull = 7 - left - right;
+                        if (lane_id > 0 && lane_id <= nfull)
+                            found = true;
+                        else if (lane_id > 7)
+                            found = true;
+                    }
+                    else if (this_lane == 10 && lane_id == 8)
+                        found = true;
+                    else if (this_lane == 11 && lane_id == 9)
+                        found = true;
+                    tmp++;
+                }
+            }
+        }
     }
     if (found)
     {
@@ -1017,26 +1030,28 @@ void CNetwork::setDetectorCorsimId(CDetector* detector)
     }
     else
     {
-	    sprintf_s(out_buf, "Detector: %d was not found", detector->getId());
-	    OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);  
+        sprintf_s(out_buf, "Detector: %d was not found", detector->getId());
+        OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
     }
 }
 
 void CNetwork::processDetectors(void)
 {
-    if (is_log_active && log_level == 2) {
+    if (is_log_active && log_level == 2)
+    {
         sprintf(out_buf, "Processing %s ...", "detectors");
         OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
     }
 
     // process any detector information
-    CLink* link = NULL;
+    CLink *link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
     while (pos != NULL)
     {
         link = m_link_list.GetNext(pos);
 
-        if (is_log_active && log_level == 2) {
+        if (is_log_active && log_level == 2)
+        {
             int out_len;
             out_len  = sprintf(out_buf, "Processing detectors on link (%d, %d) ...", link->getUpNode(), link->getDnNode());
             OutputString(out_buf, strlen(out_buf), SIM_COLOR_RGB, RTE_MESSAGE_RGB);
@@ -1049,7 +1064,7 @@ void CNetwork::processDetectors(void)
 void CNetwork::printDetectorsTransitions(void)
 {
     // process any detector information
-    CLink* link = NULL;
+    CLink *link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
     while (pos != NULL)
     {
@@ -1061,23 +1076,23 @@ void CNetwork::printDetectorsTransitions(void)
 void CNetwork::printDetectorsCount(void)
 {
     // get the count from each detector
-    CLink* link = NULL;
+    CLink *link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
     while (pos != NULL)
-    {      
-	    link = m_link_list.GetNext(pos);
+    {
+        link = m_link_list.GetNext(pos);
         link->printDetectorsCount();
     }
 }
 
 void CNetwork::resetDetectorsCount(void)
 {
-	// reset the count of each detector
-    CLink* link = NULL;
+    // reset the count of each detector
+    CLink *link = NULL;
     POSITION pos = m_link_list.GetHeadPosition();
     while (pos != NULL)
-    {      
-	    link = m_link_list.GetNext(pos);
+    {
+        link = m_link_list.GetNext(pos);
         link->resetDetectorsCount();
     }
 }

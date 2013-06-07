@@ -5,14 +5,14 @@
 #include "binary_sequence.h"
 #include "integer.h"
 
-CBinarySequence::CBinarySequence() : CObject()
-                                   , sequence()
+CBinarySequence::CBinarySequence()  :   CObject()
+    ,   sequence()
 {
 }
 
 CBinarySequence::~CBinarySequence()
 {
-    CInteger* pi = NULL;
+    CInteger *pi = NULL;
     POSITION pos = sequence.GetHeadPosition();
     while (pos != NULL)
     {
@@ -22,11 +22,11 @@ CBinarySequence::~CBinarySequence()
     sequence.RemoveAll();
 }
 
-CBinarySequence* CBinarySequence::convert(int value)
+CBinarySequence *CBinarySequence::convert(int value)
 {
     // this function converts an integer into a binary sequence
-    CBinarySequence* sequence = NULL;
-    CInteger* pi = NULL;
+    CBinarySequence *sequence = NULL;
+    CInteger *pi = NULL;
     int remainder = 0;
     int power = 0;
     // create a binary sequence
@@ -36,7 +36,7 @@ CBinarySequence* CBinarySequence::convert(int value)
     for (power = 9; power > -1; power--)
     {
         pi = new CInteger;
-	    double r2 = 2.0;
+        double r2 = 2.0;
         if (remainder >= (int) pow(r2, power))
             pi->data = 1;
         else

@@ -9,37 +9,36 @@
 #include "node.h"
 #include "link.h"
 
-CNode::CNode() : CObject()
-               , m_id(0)
-               , m_str_control_type()
-               , m_corsim_internal_id(0)
-               , m_x_pos(0)
-               , m_y_pos(0)
-{
-   for (int approach = 0; approach < max_approaches; approach++)
-   {
-      m_approaches[approach] = NULL;
-   }
-
-   for (int interval = 0; interval < max_intervals; interval++)
-   {
-      m_duration[interval] = 0;
-   }
-}
-
-CNode::CNode(int id, const CString& str_control_type)
-            : CObject()
-            , m_id(id)
-            , m_str_control_type(str_control_type)
-            , m_corsim_internal_id(0)
-            , m_x_pos(0)
-            , m_y_pos(0)
+CNode::CNode()  :   CObject()
+    ,   m_id(0)
+    ,   m_str_control_type()
+    ,   m_corsim_internal_id(0)
+    ,   m_x_pos(0)
+    ,   m_y_pos(0)
 {
     for (int approach = 0; approach < max_approaches; approach++)
     {
         m_approaches[approach] = NULL;
     }
-    for (int interval=0; interval < max_intervals; interval++)
+
+    for (int interval = 0; interval < max_intervals; interval++)
+    {
+        m_duration[interval] = 0;
+    }
+}
+
+CNode::CNode(int id, const CString &str_control_type)   :   CObject()
+    ,   m_id(id)
+    ,   m_str_control_type(str_control_type)
+    ,   m_corsim_internal_id(0)
+    ,   m_x_pos(0)
+    ,   m_y_pos(0)
+{
+    for (int approach = 0; approach < max_approaches; approach++)
+    {
+        m_approaches[approach] = NULL;
+    }
+    for (int interval = 0; interval < max_intervals; interval++)
     {
         m_duration[interval] = 0;
     }
@@ -49,9 +48,9 @@ CNode::~CNode()
 {
 }
 
-CLink* CNode::getApproach(int approach) const
+CLink *CNode::getApproach(int approach) const
 {
-    CLink* approach_link = NULL;
+    CLink *approach_link = NULL;
     if (1 <= approach && approach <= max_approaches)
     {
         approach_link = m_approaches[approach - 1];
@@ -60,7 +59,7 @@ CLink* CNode::getApproach(int approach) const
     return approach_link;
 }
 
-int CNode::setApproach(int approach, CLink* approach_link)
+int CNode::setApproach(int approach, CLink *approach_link)
 {
     int valid = -1;
     if (1 <= approach && approach <= max_approaches)
