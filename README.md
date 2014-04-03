@@ -1,4 +1,5 @@
-# SENSORS
+SENSORS [![Analytics](https://ga-beacon.appspot.com/UA-49657176-1/tsis-corsim-sensors)](https://github.com/igrigorik/ga-beacon)
+=================
 
 This is a [TSIS-CORSIM][]™ (Traffic Software Integrated System - Corridor Simulation) RTE ([run-time extension][]).
 
