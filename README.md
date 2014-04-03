@@ -1,4 +1,5 @@
-# SENSORS BUILD
+SENSORS BUILD [![Analytics](https://ga-beacon.appspot.com/UA-49657176-1/tsis-corsim-sensors/build)](https://github.com/igrigorik/ga-beacon)
+================
 
 This orphan branch contains the last compiled **DLL** that is ready for use with TSIS-CORSIM™.
 
